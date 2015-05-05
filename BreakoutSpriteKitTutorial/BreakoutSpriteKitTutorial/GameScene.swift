@@ -17,6 +17,19 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
+        
+        //Creating invisible barrier around the screen
+        let borderBody = SKPhysicsBody (edgeLoopFromRect: self.frame)
+        borderBody.friction = 0
+        self.physicsBody = borderBody
+        
+        physicsWorld.gravity = CGVectorMake(0, 0)
+        
+        let ball = childNodeWithName(BallCategoryName) as! SKSpriteNode
+        ball.physicsBody!.applyImpulse(CGVectorMake(10, -10))
     }
+    
+    
+    
     
 }
