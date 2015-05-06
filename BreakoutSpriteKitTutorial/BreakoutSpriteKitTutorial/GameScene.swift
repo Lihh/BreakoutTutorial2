@@ -48,7 +48,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ball.physicsBody!.categoryBitMask = BallCategory
         paddle.physicsBody!.categoryBitMask = PaddleCategory
         
-        ball.physicsBody!.contactTestBitMask = BottomCategory
+        ball.physicsBody!.contactTestBitMask = BottomCategory | BlockCategory
+        
+        //ADDING BLOCKS
+        let numberOfBlocks = 5
+        
+        let blockWidth = SKSpriteNode(imageNamed: "block.png").size.width
+        let totalBlockWidth = blockWidth * CGFloat(numberOfBlocks)
+        
+        let padding: CGFloat = 10.0
+        let totalPadding = padding * CGFloat(numberOfBlocks - 1)
+        
+        let xOffset = (CGRectGetWidth(frame) - totalBlockWidth - totalPadding) / 2
+        
+        //Creating and adding blocks
+        for i in 0..<numberOfBlocks {
+            let block = SKSpriteNode(imageNamed: "block.png")
+            block.position = CGPointMake(xOffset + CGFloat(CGFloat(i) + 0.5) * blockWidth + CGFloat(i - 1) * padding, CGRectGetHeight(frame) * 0.8)
+            block.physicsBody = SKPhysicsBody(rectangleOfSize: block.frame.size)
+            block.physicsBody!.allowsRotation = false
+            block.physicsBody!.friction = 0.0
+            block.physicsBody!.affectedByGravity = false
+            block.name = BlockCategoryName
+            block.physicsBody!.categoryBitMask = BlockCategory
+            block.physicsBody!.dynamic = false
+            addChild(block)
+        }
         
     }
     
@@ -108,6 +133,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 gameOverScene.gameWon = false
                 mainView.presentScene(gameOverScene)
             }
+        }
+        
+        if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
+            secondBody.node!.removeFromParent()
         }
     }
     
