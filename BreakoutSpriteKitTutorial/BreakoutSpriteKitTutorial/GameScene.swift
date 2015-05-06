@@ -137,7 +137,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == BlockCategory {
             secondBody.node!.removeFromParent()
+            if isGameWon() {
+                if let mainView = view {
+                    let gameOverScene = GameOverScene.unarchiveFromFile("GameOverScene") as! GameOverScene
+                    gameOverScene.gameWon = true
+                    mainView.presentScene(gameOverScene)
+                }
+            }
         }
+    }
+    
+    func isGameWon() -> Bool {
+        var numberOfBricks = 0
+        self.enumerateChildNodesWithName(BlockCategoryName) {
+            node, stop in
+            numberOfBricks = numberOfBricks + 1
+        }
+        return numberOfBricks == 0
     }
     
     
